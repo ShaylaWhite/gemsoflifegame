@@ -1,8 +1,13 @@
+package com.gemsoflifegame.controller;
+
 import com.gemsoflifegame.model.Game;
+import com.gemsoflifegame.model.Guess; // Make sure the Guess class is imported
 import com.gemsoflifegame.service.GameService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Controller
 @RequestMapping("/game")
@@ -19,6 +24,7 @@ public class GameController {
     public String startGame(Model model) {
         Game game = new Game();
         game.setSecretCombination(gameService.generateRandomCombination());
+        game.setAttemptsRemaining(10); // Set initial attempts (you can customize this value)
         model.addAttribute("game", game);
         return "game"; // return to game.html
     }
