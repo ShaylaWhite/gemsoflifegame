@@ -21,10 +21,12 @@ public class Game {
 
     private int attemptsRemaining;
     private String lifeLesson;
+    private boolean gameOver; // Added this field
 
     public Game() {
         this.attemptsRemaining = 10;
         this.lifeLesson = "Perseverance";
+        this.gameOver = false; // Initialize to false
     }
 
     // Getter and Setter for secretCombination
@@ -62,5 +64,13 @@ public class Game {
     public void setLifeLesson(String lifeLesson) {
         this.lifeLesson = lifeLesson;
     }
-}
 
+    // Getter and Setter for gameOver
+    public boolean isGameOver() {
+        return gameOver;
+    }
+
+    public void setGameOver(boolean gameOver) {
+        this.gameOver = gameOver;
+    }
+}

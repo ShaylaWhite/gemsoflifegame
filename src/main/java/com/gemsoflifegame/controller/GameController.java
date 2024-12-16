@@ -4,6 +4,7 @@ import com.gemsoflifegame.model.Game;
 import com.gemsoflifegame.model.Guess;
 import com.gemsoflifegame.service.GameService;
 import com.gemsoflifegame.repository.GameRepository;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -26,24 +27,22 @@ public class GameController {
 
     @GetMapping("/start")
     public String startGame(Model model) {
-        try {
-            Game game = new Game();
-            game.setSecretCombination(gameService.generateRandomCombination());
-            game.setAttemptsRemaining(10); // default attempts
-            gameRepository.save(game);
-            model.addAttribute("game", game);
-            return "game";
-        } catch (Exception e) {
-            model.addAttribute("error", "Error starting the game: " + e.getMessage());
-            return "game";
-        }
+        // Initialize a new game and set the secret combination here
+        Game game = new Game();
+        gameRepository.save(game);  // Save the game to the repository
+
+        model.addAttribute("gameId", game.getId());  // Pass the gameId to the view
+        model.addAttribute("attemptsRemaining", game.getAttemptsRemaining());
+        model.addAttribute("lifeLesson", game.getLifeLesson());
+
+        return "game";  // Return the game page
     }
 
     @PostMapping("/guess")
-    public String makeGuess(@RequestParam Long gameId, @RequestParam String guess, Model model) {
+    @ResponseBody
+    public ResponseEntity<Game> makeGuess(@RequestParam Long gameId, @RequestParam String guess) {
         if (guess == null || guess.isEmpty()) {
-            model.addAttribute("error", "Guess cannot be empty.");
-            return "game";
+            return ResponseEntity.badRequest().build();
         }
 
         // Convert the comma-separated guess string into a list of integers
@@ -61,17 +60,17 @@ public class GameController {
         try {
             gameRepository.save(game);
         } catch (Exception e) {
-            model.addAttribute("error", "Error saving game: " + e.getMessage());
-            return "game";
+            return ResponseEntity.internalServerError().build();
         }
 
         if (game.getAttemptsRemaining() <= 0 || feedback.contains("4 correct position(s)")) {
-            model.addAttribute("gameOver", true);
+            game.setGameOver(true);  // Mark game as over
         }
 
-        model.addAttribute("game", game);
-        return "game";
+        // Return updated game state as JSON
+        return ResponseEntity.ok(game);
     }
+
 
     @GetMapping("/history")
     public String viewGameHistory(Model model) {
@@ -80,5 +79,4 @@ public class GameController {
         return "gameHistory";
     }
 }
-
 

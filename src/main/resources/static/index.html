@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Gem of Life Game</title>
+</head>
+<body>
+<h1>Welcome to the Gem of Life Game!</h1>
+
+<div>
+    <h3>Game Information</h3>
+    <p id="attemptsRemaining">Attempts Remaining: 10</p>
+    <p id="lifeLesson">Life Lesson: Unknown</p>
+</div>
+
+<h3>Make a Guess</h3>
+<form id="guessForm">
+    <input type="hidden" id="gameId" name="gameId" value="">
+
+    <label for="guess1">Guess 1:</label>
+    <input type="text" id="guess1" name="guess" placeholder="Enter Guess 1" required>
+
+    <label for="guess2">Guess 2:</label>
+    <input type="text" id="guess2" name="guess" placeholder="Enter Guess 2" required>
+
+    <label for="guess3">Guess 3:</label>
+    <input type="text" id="guess3" name="guess" placeholder="Enter Guess 3" required>
+
+    <label for="guess4">Guess 4:</label>
+    <input type="text" id="guess4" name="guess" placeholder="Enter Guess 4" required>
+
+    <button type="submit">Submit Guess</button>
+</form>
+
+<h3>Feedback</h3>
+<p id="feedback">No guesses made yet.</p>
+
+<h3>Your Guess History:</h3>
+<table id="guessHistory">
+    <thead>
+    <tr>
+        <th>Guess</th>
+        <th>Feedback</th>
+    </tr>
+    </thead>
+    <tbody>
+    <!-- Guess history rows will be dynamically added here -->
+    </tbody>
+</table>
+
+<script>
+    document.getElementById('guessForm').addEventListener('submit', function(event) {
+        event.preventDefault();
+
+        const gameId = document.getElementById('gameId').value;
+        const guesses = [
+            document.getElementById('guess1').value,
+            document.getElementById('guess2').value,
+            document.getElementById('guess3').value,
+            document.getElementById('guess4').value
+        ];
+
+        const guessString = guesses.join(',');
+
+        fetch(`/game/guess?gameId=${gameId}&guess=${guessString}`, {
+            method: 'POST'
+        })
+            .then(response => response.json())
+            .then(data => {
+                updateGameInfo(data);
+                updateGuessHistory(data.guesses);
+            })
+            .catch(error => console.error('Error:', error));
+    });
+
+    function updateGameInfo(data) {
+        document.getElementById('attemptsRemaining').textContent = `Attempts Remaining: ${data.attemptsRemaining}`;
+        document.getElementById('lifeLesson').textContent = `Life Lesson: ${data.lifeLesson}`;
+        document.getElementById('feedback').textContent = data.feedback || 'No guesses made yet.';
+    }
+
+    function updateGuessHistory(guesses) {
+        const historyTableBody = document.getElementById('guessHistory').querySelector('tbody');
+        historyTableBody.innerHTML = ''; // Clear existing history
+
+        guesses.forEach(guess => {
+            const row = document.createElement('tr');
+            const guessCell = document.createElement('td');
+            guessCell.textContent = guess.guess.join(', ');
+            const feedbackCell = document.createElement('td');
+            feedbackCell.textContent = guess.feedback;
+            row.appendChild(guessCell);
+            row.appendChild(feedbackCell);
+            historyTableBody.appendChild(row);
+        });
+    }
+</script>
+</body>
+</html>
