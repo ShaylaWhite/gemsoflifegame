@@ -12,7 +12,8 @@ import java.util.stream.Collectors;
 
 @Service
 public class GameService {
-    private static final String RANDOM_API_URL = "https://example.com/random";
+
+    private static final String RANDOM_API_URL = "https://www.random.org/integers";
 
     private final GameRepository gameRepository;
     private final GuessRepository guessRepository;
@@ -26,10 +27,16 @@ public class GameService {
     }
 
     public List<Integer> generateRandomCombination() {
-        String response = restTemplate.getForObject(RANDOM_API_URL, String.class);
+        // Build the API URL with the required parameters
+        String url = RANDOM_API_URL + "?num=4&min=0&max=7&col=1&base=10&format=plain";
+
+        // Fetch the response from the Random.org API
+        String response = restTemplate.getForObject(url, String.class);
         if (response == null || response.isEmpty()) {
             throw new RuntimeException("Failed to fetch random combination from API.");
         }
+
+        // Split the response by line and parse each integer into a List
         return Arrays.stream(response.split("\n"))
                 .map(Integer::parseInt)
                 .collect(Collectors.toList());
@@ -68,5 +75,4 @@ public class GameService {
 
         return correctPositions + " correct position(s), " + correctDigits + " correct number(s)";
     }
-
 }
