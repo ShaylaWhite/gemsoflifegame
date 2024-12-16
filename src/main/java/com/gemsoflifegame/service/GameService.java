@@ -1,37 +1,45 @@
 package com.gemsoflifegame.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 public class GameService {
-    @Autowired
+    private static final String RANDOM_API_URL = "https://www.random.org/integers/?num=4&min=0&max=7&col=1&base=10&format=plain";
+
     private RestTemplate restTemplate;
 
-    private final String API_URL = "https://www.random.org/integers/?num=4&min=0&max=7&col=1&base=10&format=plain";
+    public GameService(RestTemplate restTemplate) {
+        this.restTemplate = restTemplate;
+    }
 
-    public int[] generateNumbers() {
-        try {
-            String response = restTemplate.getForObject(API_URL, String.class);
-            if (response != null) {
-                String[] numbers = response.split("\n");
-                if (numbers.length == 4) {
-                    return new int[]{
-                            Integer.parseInt(numbers[0]),
-                            Integer.parseInt(numbers[1]),
-                            Integer.parseInt(numbers[2]),
-                            Integer.parseInt(numbers[3])
-                    };
-                } else {
-                    throw new RuntimeException("Unexpected number of values in response.");
+    // Generate a random 4-digit combination
+    public List<Integer> generateRandomCombination() {
+        String response = restTemplate.getForObject(RANDOM_API_URL, String.class);
+        return Arrays.stream(response.split("\n"))
+                .map(Integer::parseInt)
+                .collect(Collectors.toList());
+    }
+
+    // Check the player's guess
+    public String checkGuess(List<Integer> guess, List<Integer> secretCombination) {
+        int correctDigits = 0;
+        int correctPositions = 0;
+
+        for (int i = 0; i < guess.size(); i++) {
+            if (secretCombination.contains(guess.get(i))) {
+                correctDigits++;
+                if (secretCombination.get(i).equals(guess.get(i))) {
+                    correctPositions++;
                 }
-            } else {
-                throw new RuntimeException("No response from the API");
             }
-        } catch (Exception e) {
-            throw new RuntimeException("Error fetching numbers: " + e.getMessage(), e);
         }
+
+        return correctPositions + " correct position(s), " + correctDigits + " correct number(s)";
     }
 }
 
