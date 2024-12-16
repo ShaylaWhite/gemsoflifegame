@@ -1,66 +1,84 @@
-package com.gemsoflifegame.model;
+package com.gemsoflifegame.controller;
 
-import jakarta.persistence.*;
-import java.util.ArrayList;
+import com.gemsoflifegame.model.Game;
+import com.gemsoflifegame.model.Guess;
+import com.gemsoflifegame.service.GameService;
+import com.gemsoflifegame.repository.GameRepository;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.Arrays;
 
-@Entity
-public class Game {
+@Controller
+@RequestMapping("/game")
+public class GameController {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private final GameService gameService;
+    private final GameRepository gameRepository;
 
-    @ElementCollection
-    @CollectionTable(name = "secret_combinations", joinColumns = @JoinColumn(name = "game_id"))
-    @Column(name = "combination")
-    private List<Integer> secretCombination = new ArrayList<>();
-
-    @OneToMany(mappedBy = "game", cascade = CascadeType.ALL)
-    private List<Guess> guesses = new ArrayList<>();
-
-    private int attemptsRemaining;
-    private String lifeLesson;
-
-    public Game() {
-        this.attemptsRemaining = 10;
-        this.lifeLesson = "Perseverance";
+    public GameController(GameService gameService, GameRepository gameRepository) {
+        this.gameService = gameService;
+        this.gameRepository = gameRepository;
     }
 
-    // Getter and Setter for secretCombination
-    public List<Integer> getSecretCombination() {
-        return secretCombination;
+    @GetMapping("/start")
+    public String startGame(Model model) {
+        try {
+            Game game = new Game();
+            game.setSecretCombination(gameService.generateRandomCombination());
+            game.setAttemptsRemaining(10); // default attempts
+            gameRepository.save(game);
+            model.addAttribute("game", game);
+            return "game";
+        } catch (Exception e) {
+            model.addAttribute("error", "Error starting the game: " + e.getMessage());
+            return "game";
+        }
     }
 
-    public void setSecretCombination(List<Integer> secretCombination) {
-        this.secretCombination = secretCombination;
+    @PostMapping("/guess")
+    public String makeGuess(@RequestParam Long gameId, @RequestParam String guess, Model model) {
+        if (guess == null || guess.isEmpty()) {
+            model.addAttribute("error", "Guess cannot be empty.");
+            return "game";
+        }
+
+        // Convert the comma-separated guess string into a list of integers
+        List<Integer> guessList = Arrays.stream(guess.split(","))
+                .map(Integer::parseInt)
+                .collect(Collectors.toList());
+
+        Game game = gameRepository.findById(gameId)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid game ID"));
+
+        String feedback = gameService.checkGuess(guessList, game.getSecretCombination());
+        game.getGuesses().add(new Guess(guessList, feedback));
+        game.setAttemptsRemaining(game.getAttemptsRemaining() - 1);
+
+        try {
+            gameRepository.save(game);
+        } catch (Exception e) {
+            model.addAttribute("error", "Error saving game: " + e.getMessage());
+            return "game";
+        }
+
+        if (game.getAttemptsRemaining() <= 0 || feedback.contains("4 correct position(s)")) {
+            model.addAttribute("gameOver", true);
+        }
+
+        model.addAttribute("game", game);
+        return "game";
     }
 
-    // Getter and Setter for guesses
-    public List<Guess> getGuesses() {
-        return guesses;
-    }
-
-    public void setGuesses(List<Guess> guesses) {
-        this.guesses = guesses;
-    }
-
-    // Getter and Setter for attemptsRemaining
-    public int getAttemptsRemaining() {
-        return attemptsRemaining;
-    }
-
-    public void setAttemptsRemaining(int attemptsRemaining) {
-        this.attemptsRemaining = attemptsRemaining;
-    }
-
-    // Getter and Setter for lifeLesson (if needed)
-    public String getLifeLesson() {
-        return lifeLesson;
-    }
-
-    public void setLifeLesson(String lifeLesson) {
-        this.lifeLesson = lifeLesson;
+    @GetMapping("/history")
+    public String viewGameHistory(Model model) {
+        List<Game> gameHistory = gameRepository.findByAttemptsRemaining(0);
+        model.addAttribute("gameHistory", gameHistory);
+        return "gameHistory";
     }
 }
+
 
