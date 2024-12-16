@@ -26,9 +26,9 @@ public class GameController {
     public String startGame(Model model) {
         Game game = new Game();
         game.setSecretCombination(gameService.generateRandomCombination());
-        gameRepository.save(game);  // Save the new game to the database
+        gameRepository.save(game);
         model.addAttribute("game", game);
-        return "game"; // return to game.html
+        return "game";
     }
 
     @PostMapping("/guess")
@@ -36,24 +36,21 @@ public class GameController {
         String feedback = gameService.checkGuess(guess, game.getSecretCombination());
         game.getGuesses().add(new Guess(guess, feedback));
         game.setAttemptsRemaining(game.getAttemptsRemaining() - 1);
-
-        // Save updated game state
         gameRepository.save(game);
 
-        // Handle when the game is over or a correct guess is made
         if (game.getAttemptsRemaining() <= 0 || feedback.contains("4 correct position(s)")) {
             model.addAttribute("gameOver", true);
         }
 
         model.addAttribute("game", game);
-        return "game"; // update the UI with new state
+        return "game";
     }
 
-    // View game history
     @GetMapping("/history")
     public String viewGameHistory(Model model) {
-        List<Game> gameHistory = gameRepository.findByAttemptsRemaining(0); // Get all completed games (attemptsRemaining == 0)
+        List<Game> gameHistory = gameRepository.findByAttemptsRemaining(0);
         model.addAttribute("gameHistory", gameHistory);
-        return "gameHistory"; // View game history page
+        return "gameHistory";
     }
 }
+

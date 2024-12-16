@@ -14,10 +14,10 @@ public class Game {
     @ElementCollection
     @CollectionTable(name = "secret_combinations", joinColumns = @JoinColumn(name = "game_id"))
     @Column(name = "combination")
-    private List<Integer> secretCombination = new ArrayList<>();  // Storing the secret combination
+    private List<Integer> secretCombination = new ArrayList<>();
 
     @OneToMany(mappedBy = "game", cascade = CascadeType.ALL)
-    private List<Guess> guesses = new ArrayList<>();  // List of guesses for this game
+    private List<Guess> guesses = new ArrayList<>();
 
     private int attemptsRemaining;
     private String lifeLesson;
@@ -27,16 +27,7 @@ public class Game {
         this.lifeLesson = "Perseverance";
     }
 
-    // Getters and setters
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
+    // Getter and Setter for secretCombination
     public List<Integer> getSecretCombination() {
         return secretCombination;
     }
@@ -45,6 +36,7 @@ public class Game {
         this.secretCombination = secretCombination;
     }
 
+    // Getter and Setter for guesses
     public List<Guess> getGuesses() {
         return guesses;
     }
@@ -53,6 +45,7 @@ public class Game {
         this.guesses = guesses;
     }
 
+    // Getter and Setter for attemptsRemaining
     public int getAttemptsRemaining() {
         return attemptsRemaining;
     }
@@ -61,6 +54,7 @@ public class Game {
         this.attemptsRemaining = attemptsRemaining;
     }
 
+    // Getter and Setter for lifeLesson (if needed)
     public String getLifeLesson() {
         return lifeLesson;
     }

@@ -1,5 +1,8 @@
 package com.gemsoflifegame.service;
 
+import com.gemsoflifegame.repository.GameRepository;
+import com.gemsoflifegame.repository.GuessRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -9,36 +12,39 @@ import java.util.stream.Collectors;
 
 @Service
 public class GameService {
-    private static final String RANDOM_API_URL = "https://www.random.org/integers/?num=4&min=0&max=7&col=1&base=10&format=plain";
+    private static final String RANDOM_API_URL = "https://example.com/random";
 
-    private RestTemplate restTemplate;
+    private final GameRepository gameRepository;
+    private final GuessRepository guessRepository;
+    private final RestTemplate restTemplate;
 
-    public GameService(RestTemplate restTemplate) {
+    @Autowired
+    public GameService(GameRepository gameRepository, GuessRepository guessRepository, RestTemplate restTemplate) {
+        this.gameRepository = gameRepository;
+        this.guessRepository = guessRepository;
         this.restTemplate = restTemplate;
     }
 
-    // Generate a random 4-digit combination using an external API
     public List<Integer> generateRandomCombination() {
         String response = restTemplate.getForObject(RANDOM_API_URL, String.class);
-        // Convert the response (a list of numbers separated by newlines) into a List of integers
+        if (response == null || response.isEmpty()) {
+            throw new RuntimeException("Failed to fetch random combination from API.");
+        }
         return Arrays.stream(response.split("\n"))
                 .map(Integer::parseInt)
                 .collect(Collectors.toList());
     }
 
-    // Check the player's guess against the secret combination
     public String checkGuess(List<Integer> guess, List<Integer> secretCombination) {
         int correctDigits = 0;
         int correctPositions = 0;
 
-        // First loop to count correct positions
         for (int i = 0; i < guess.size(); i++) {
             if (secretCombination.get(i).equals(guess.get(i))) {
                 correctPositions++;
             }
         }
 
-        // Second loop to count correct digits in incorrect positions
         for (int i = 0; i < guess.size(); i++) {
             if (!secretCombination.get(i).equals(guess.get(i)) && secretCombination.contains(guess.get(i))) {
                 correctDigits++;
