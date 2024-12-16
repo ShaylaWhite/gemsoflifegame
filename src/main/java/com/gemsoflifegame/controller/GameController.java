@@ -24,12 +24,17 @@ public class GameController {
 
     @GetMapping("/start")
     public String startGame(Model model) {
-        Game game = new Game();
-        game.setSecretCombination(gameService.generateRandomCombination());
-        game.setAttemptsRemaining(10); // default attempts
-        gameRepository.save(game);
-        model.addAttribute("game", game);
-        return "game";
+        try {
+            Game game = new Game();
+            game.setSecretCombination(gameService.generateRandomCombination());
+            game.setAttemptsRemaining(10); // default attempts
+            gameRepository.save(game);
+            model.addAttribute("game", game);
+            return "game";
+        } catch (Exception e) {
+            model.addAttribute("error", "Error starting the game: " + e.getMessage());
+            return "game"; // You can redirect to a generic error page if needed
+        }
     }
 
 
