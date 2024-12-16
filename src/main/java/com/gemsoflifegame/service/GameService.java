@@ -41,5 +41,14 @@ public class GameService {
 
         return correctPositions + " correct position(s), " + correctDigits + " correct number(s)";
     }
+    // Helper method to check if a number exists in the secret combination (but not at the same position)
+    private boolean containsNumber(int[] secretCombination, int number) {
+        for (int i : secretCombination) {
+            if (i == number) {
+                return true;
+            }
+        }
+        return false;
+    }
 }
 
