@@ -7,7 +7,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class GemsoflifeGameApplication {
 
 	public static void main(String[] args) {
+		// This runs the Spring Boot application
 		SpringApplication.run(GemsoflifeGameApplication.class, args);
 	}
-
 }
