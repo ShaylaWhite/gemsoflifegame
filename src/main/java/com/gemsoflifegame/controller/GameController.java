@@ -26,17 +26,31 @@ public class GameController {
     public String startGame(Model model) {
         Game game = new Game();
         game.setSecretCombination(gameService.generateRandomCombination());
+        game.setAttemptsRemaining(10); // default attempts
         gameRepository.save(game);
         model.addAttribute("game", game);
         return "game";
     }
 
     @PostMapping("/guess")
-    public String makeGuess(@ModelAttribute Game game, @RequestParam List<Integer> guess, Model model) {
+    public String makeGuess(@RequestParam Long gameId, @RequestParam List<Integer> guess, Model model) {
+        if (guess == null || guess.isEmpty()) {
+            model.addAttribute("error", "Guess cannot be empty.");
+            return "game";
+        }
+
+        Game game = gameRepository.findById(gameId).orElseThrow(() -> new IllegalArgumentException("Invalid game ID"));
+
         String feedback = gameService.checkGuess(guess, game.getSecretCombination());
         game.getGuesses().add(new Guess(guess, feedback));
         game.setAttemptsRemaining(game.getAttemptsRemaining() - 1);
-        gameRepository.save(game);
+
+        try {
+            gameRepository.save(game);
+        } catch (Exception e) {
+            model.addAttribute("error", "Error saving game: " + e.getMessage());
+            return "game";
+        }
 
         if (game.getAttemptsRemaining() <= 0 || feedback.contains("4 correct position(s)")) {
             model.addAttribute("gameOver", true);
@@ -53,4 +67,3 @@ public class GameController {
         return "gameHistory";
     }
 }
-
