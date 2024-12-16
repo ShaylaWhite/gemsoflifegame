@@ -1,63 +1,46 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gem of Life Game</title>
-    <script>
-        function handleGuess() {
-            var gameId = document.getElementById('gameId').value;
-            var guessInputs = document.getElementsByClassName('guessInput');
-            var guess = [];
-            for (var i = 0; i < guessInputs.length; i++) {
-                guess.push(parseInt(guessInputs[i].value));
-            }
-
-            // Alert the user that the guess has been submitted
-            alert('Your guess: ' + guess.join(', '));
-
-            // Optionally, you could submit the form programmatically here if needed
-            document.getElementById('guessForm').submit();
-        }
-    </script>
+    <title>Guess Game</title>
 </head>
 <body>
-<h1>Welcome to the Gem of Life Game!</h1>
+<h1>Game</h1>
 
-<div>
-    <!-- Display Game Info -->
-    <h2>Game Information</h2>
-    <p>Attempts Remaining: <span id="attemptsRemaining">${game.attemptsRemaining}</span></p>
-    <p>Life Lesson: <span id="lifeLesson">${game.lifeLesson}</span></p>
-
-    <!-- Form to input guess -->
-    <h2>Make a Guess</h2>
-    <form id="guessForm" action="/game/guess" method="post">
-        <input type="hidden" name="gameId" id="gameId" value="${game.id}">
-
-        <label for="guess1">Guess 1:</label>
-        <input type="number" class="guessInput" id="guess1" name="guess" min="0" max="7">
-        <label for="guess2">Guess 2:</label>
-        <input type="number" class="guessInput" id="guess2" name="guess" min="0" max="7">
-        <label for="guess3">Guess 3:</label>
-        <input type="number" class="guessInput" id="guess3" name="guess" min="0" max="7">
-        <label for="guess4">Guess 4:</label>
-        <input type="number" class="guessInput" id="guess4" name="guess" min="0" max="7">
-
-        <button type="button" onclick="handleGuess()">Submit Guess</button>
-    </form>
-
-    <!-- Display Feedback after Guess -->
-    <div>
-        <h3>Feedback:</h3>
-        <p id="feedback">${game.guesses[game.guesses.size() - 1]?.feedback || ''}</p>
-    </div>
-
-    <!-- Game Over Message -->
-    <div id="gameOverMessage" style="display:none;">
-        <h2>Game Over!</h2>
-        <p>Your attempts are over or you guessed correctly!</p>
-    </div>
+<div th:if="${gameOver}">
+    <h2>Game Over!</h2>
 </div>
+
+<div th:if="${error}">
+    <p class="error">${error}</p>
+</div>
+
+<p>Attempts Remaining: <span th:text="${game.attemptsRemaining}"></span></p>
+
+<!-- Display Game's Secret Combination (for testing only, remove in production) -->
+<p>Secret Combination: <span th:text="${game.secretCombination}"></span></p>
+
+<!-- Make Guess Form -->
+<form action="/game/guess" method="post">
+    <input type="hidden" name="gameId" th:value="${game.id}">
+    <input type="text" name="guess" placeholder="Enter your guess (comma-separated)" required>
+    <button type="submit">Submit Guess</button>
+</form>
+
+<h3>Your Guess History:</h3>
+<table>
+    <thead>
+    <tr>
+        <th>Guess</th>
+        <th>Feedback</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="guess : ${game.guesses}">
+        <td th:text="${#strings.join(guess.guess, ', ')}"></td>
+        <td th:text="${guess.feedback}"></td>
+    </tr>
+    </tbody>
+</table>
+
 </body>
 </html>
