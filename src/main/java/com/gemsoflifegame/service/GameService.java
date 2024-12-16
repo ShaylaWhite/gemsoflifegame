@@ -17,38 +17,34 @@ public class GameService {
         this.restTemplate = restTemplate;
     }
 
-    // Generate a random 4-digit combination
+    // Generate a random 4-digit combination using an external API
     public List<Integer> generateRandomCombination() {
         String response = restTemplate.getForObject(RANDOM_API_URL, String.class);
+        // Convert the response (a list of numbers separated by newlines) into a List of integers
         return Arrays.stream(response.split("\n"))
                 .map(Integer::parseInt)
                 .collect(Collectors.toList());
     }
 
-    // Check the player's guess
+    // Check the player's guess against the secret combination
     public String checkGuess(List<Integer> guess, List<Integer> secretCombination) {
         int correctDigits = 0;
         int correctPositions = 0;
 
+        // First loop to count correct positions
         for (int i = 0; i < guess.size(); i++) {
-            if (secretCombination.contains(guess.get(i))) {
+            if (secretCombination.get(i).equals(guess.get(i))) {
+                correctPositions++;
+            }
+        }
+
+        // Second loop to count correct digits in incorrect positions
+        for (int i = 0; i < guess.size(); i++) {
+            if (!secretCombination.get(i).equals(guess.get(i)) && secretCombination.contains(guess.get(i))) {
                 correctDigits++;
-                if (secretCombination.get(i).equals(guess.get(i))) {
-                    correctPositions++;
-                }
             }
         }
 
         return correctPositions + " correct position(s), " + correctDigits + " correct number(s)";
     }
-    // Helper method to check if a number exists in the secret combination (but not at the same position)
-    private boolean containsNumber(int[] secretCombination, int number) {
-        for (int i : secretCombination) {
-            if (i == number) {
-                return true;
-            }
-        }
-        return false;
-    }
 }
-
