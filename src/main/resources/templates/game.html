@@ -1,0 +1,24 @@
+<html>
+<body>
+<h1>Mastermind Game</h1>
+<form action="#" th:action="@{/game/guess}" method="post">
+    <label for="guess">Enter your guess:</label>
+
+    <!-- Updated guess input field to allow multiple values -->
+    <input type="number" id="guess" name="guess" required/>
+
+    <!-- Add the gameId as a hidden input field to associate the guess with the specific game -->
+    <input type="hidden" name="gameId" th:value="${game.id}" />
+
+    <button type="submit">Submit Guess</button>
+</form>
+
+<div th:if="${game != null}">
+    <h2>Attempts Remaining: <span th:text="${game.attemptsRemaining}"></span></h2>
+</div>
+
+<div th:if="${error}">
+    <p th:text="${error}"></p>
+</div>
+</body>
+</html>
