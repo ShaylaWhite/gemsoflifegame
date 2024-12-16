@@ -1,3 +1,5 @@
+import com.gemsoflifegame.model.Game;
+import com.gemsoflifegame.service.GameService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
