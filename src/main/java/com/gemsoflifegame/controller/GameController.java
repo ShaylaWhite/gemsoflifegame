@@ -1,16 +1,15 @@
 package com.gemsoflifegame.controller;
 
 import com.gemsoflifegame.model.Game;
-import com.gemsoflifegame.model.Guess;  // Make sure the Guess class is imported
-import com.gemsoflifegame.repository.GameRepository;  // Import GameRepository for access to the database
-import com.gemsoflifegame.service.GameService;  // Import GameService for generating random combinations and checking guesses
+import com.gemsoflifegame.model.Guess;
+import com.gemsoflifegame.service.GameService;
+import com.gemsoflifegame.repository.GameRepository;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-import java.util.List;
 @Controller
 @RequestMapping("/game")
 public class GameController {
