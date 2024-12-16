@@ -1,11 +1,14 @@
 package com.gemsoflifegame.controller;
 
 import com.gemsoflifegame.model.Game;
-import com.gemsoflifegame.model.Guess; // Make sure the Guess class is imported
-import com.gemsoflifegame.service.GameService;
+import com.gemsoflifegame.model.Guess;  // Make sure the Guess class is imported
+import com.gemsoflifegame.repository.GameRepository;  // Import GameRepository for access to the database
+import com.gemsoflifegame.service.GameService;  // Import GameService for generating random combinations and checking guesses
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 import java.util.List;
 @Controller
@@ -20,7 +23,6 @@ public class GameController {
         this.gameRepository = gameRepository;
     }
 
-    // Start a new game
     @GetMapping("/start")
     public String startGame(Model model) {
         Game game = new Game();
@@ -30,7 +32,6 @@ public class GameController {
         return "game"; // return to game.html
     }
 
-    // Handle player's guess
     @PostMapping("/guess")
     public String makeGuess(@ModelAttribute Game game, @RequestParam List<Integer> guess, Model model) {
         String feedback = gameService.checkGuess(guess, game.getSecretCombination());
@@ -52,7 +53,7 @@ public class GameController {
     // View game history
     @GetMapping("/history")
     public String viewGameHistory(Model model) {
-        List<Game> gameHistory = gameRepository.findByAttemptsRemaining(0); // Get all completed games
+        List<Game> gameHistory = gameRepository.findByAttemptsRemaining(0); // Get all completed games (attemptsRemaining == 0)
         model.addAttribute("gameHistory", gameHistory);
         return "gameHistory"; // View game history page
     }

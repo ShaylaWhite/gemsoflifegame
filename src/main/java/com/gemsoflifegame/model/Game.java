@@ -1,21 +1,42 @@
 package com.gemsoflifegame.model;
 
+import jakarta.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
+@Entity
 public class Game {
-    private List<Integer> secretCombination; // The computer's number combination
-    private List<Guess> guesses; // User guesses
-    private int attemptsRemaining; // Attempts left
-    private String lifeLesson; // Life lesson corresponding to current guess
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @ElementCollection
+    @CollectionTable(name = "secret_combinations", joinColumns = @JoinColumn(name = "game_id"))
+    @Column(name = "combination")
+    private List<Integer> secretCombination = new ArrayList<>();  // Storing the secret combination
+
+    @OneToMany(mappedBy = "game", cascade = CascadeType.ALL)
+    private List<Guess> guesses = new ArrayList<>();  // List of guesses for this game
+
+    private int attemptsRemaining;
+    private String lifeLesson;
 
     public Game() {
-        this.attemptsRemaining = 10; // Default number of attempts
-        this.guesses = new ArrayList<>();
-        this.lifeLesson = "Perseverance"; // initial lesson
+        this.attemptsRemaining = 10;
+        this.lifeLesson = "Perseverance";
     }
 
-    // Getter and Setter for secretCombination
+    // Getters and setters
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     public List<Integer> getSecretCombination() {
         return secretCombination;
     }
@@ -24,7 +45,6 @@ public class Game {
         this.secretCombination = secretCombination;
     }
 
-    // Getter and Setter for guesses
     public List<Guess> getGuesses() {
         return guesses;
     }
@@ -33,7 +53,6 @@ public class Game {
         this.guesses = guesses;
     }
 
-    // Getter and Setter for attemptsRemaining
     public int getAttemptsRemaining() {
         return attemptsRemaining;
     }
@@ -42,7 +61,6 @@ public class Game {
         this.attemptsRemaining = attemptsRemaining;
     }
 
-    // Getter and Setter for lifeLesson
     public String getLifeLesson() {
         return lifeLesson;
     }
