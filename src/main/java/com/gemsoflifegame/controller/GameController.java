@@ -32,12 +32,16 @@ public class GameController {
         return "game";
     }
 
+
     @PostMapping("/guess")
     public String makeGuess(@RequestParam Long gameId, @RequestParam List<Integer> guess, Model model) {
         if (guess == null || guess.isEmpty()) {
             model.addAttribute("error", "Guess cannot be empty.");
             return "game";
         }
+
+        // Debugging: Print the guess to verify it's being received correctly
+        System.out.println("Received guess: " + guess);
 
         Game game = gameRepository.findById(gameId).orElseThrow(() -> new IllegalArgumentException("Invalid game ID"));
 
