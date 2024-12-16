@@ -5,9 +5,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
 public class GemsoflifeGameApplication {
-
 	public static void main(String[] args) {
 		SpringApplication.run(GemsoflifeGameApplication.class, args);
 	}
-
 }
+
