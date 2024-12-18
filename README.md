@@ -54,7 +54,7 @@ This game integrates lessons inspired by values crucial for success in backend e
 3. If using Maven, build the project:
       ```
     mvn clean install
-       ```bash
+       ```
 
 Open the project in your preferred IDE (IntelliJ, Eclipse) or compile it using the terminal.
 
