@@ -19,13 +19,13 @@
 ## Overview
 **Gems of Life** is a console-based guessing game that blends problem-solving and personal growth. Players guess a secret combination of four numbers within 10 attempts. Along the way, they collect gems based on their guesses and receive motivational life lessons tied to each attempt. This project is designed to highlight key backend skills while encouraging players to reflect on important life values.
 
-## Technologies Used
+## 🔧 Technologies Used
 - **Java**: Core programming language for the game.
 - **Spring Boot**: Backend framework for structure and service implementation, embracing MVC and OOP principles.
 - **Maven**: For dependency management.
 - **RestTemplate**: Simplifies HTTP communication.
 
-## Core Values
+## 🏅 Life Lessons Integration
 This game integrates lessons inspired by values crucial for success in backend engineering and life:
 - **Grit**: Persistence and passion in the face of challenges.
 - **Self-Learning**: Commitment to continuous improvement.
@@ -35,6 +35,16 @@ This game integrates lessons inspired by values crucial for success in backend e
 - **Belief in Yourself**: Confidence and motivation to succeed.
 - **Adaptability**: Flexibility to pivot and embrace change.
 - **Collaboration**: Effective teamwork and communication.
+
+## 🧠 Core Backend Highlights
+This project is designed to highlight backend engineering skills by focusing on:
+- **Data Handling**: Efficiently managing game state, including secret combinations, guesses, and attempts, through robust data structures.
+- **Logic Implementation**: Developing accurate algorithms for calculating correct numbers, positions, and determining game outcomes.
+- **State Management:** Tracking user progress and integrating life lessons dynamically based on their gameplay.
+- **Error Handling**: Anticipating invalid inputs and ensuring the game continues running smoothly without disruptions.
+  **Scalability:** Using modular design principles for easy integration of additional features, such as hints or web-based APIs.
+
+# 🎮 Game Overview
 
 ## How to Set Up
 
@@ -57,7 +67,7 @@ This game integrates lessons inspired by values crucial for success in backend e
 
 Open the project in your preferred IDE (IntelliJ, Eclipse) or compile it using the terminal.
 
-### Running the Game
+### 🛠️ How to Run
 - Using the Command Line
 - Navigate to the src directory and locate the ConsoleUI class.
 - Compile the program:
@@ -101,14 +111,14 @@ Life Lesson: 💎 Grit: "Success is not final, failure is not fatal: It is the c
 You have 9 guesses left.
 ===============================================
 ```
-## User Stories
+## 📜 User Stories
 
 - **As a player**, I want to guess a secret combination of numbers so that I can earn gems and reflect on life lessons.
 - **As a player**, I want to see how many correct numbers and correct positions I have guessed, so I can improve my next guess.
 - **As a player**, I want to receive a life lesson after each guess to motivate me and inspire personal growth.
 - **As a player**, I want to know how many attempts I have left to guess the combination, so I can plan my strategy accordingly.
 
-## Code Structure
+## 📂 Code Structure
 
 The project is structured using **Model-View-Controller (MVC)** and **Object-Oriented Programming (OOP)** principles. Here’s how the code is organized:
 
@@ -123,7 +133,7 @@ The project is structured using **Model-View-Controller (MVC)** and **Object-Ori
 - **Controller**: Manages the flow of the game, updates the game state, and interacts with the view to display the results.
   - `GameController`: Coordinates the game logic, manages guesses, tracks attempts, and triggers life lessons.
 
-## Backend Skills Highlights
+## 🤝 Backend Skills Demonstrated
 
 This project demonstrates various backend development skills:
 
@@ -141,7 +151,7 @@ While this game is currently console-based and does not expose traditional API e
 - `POST /game/guess`: Submits a player’s guess and returns the result (correct numbers, positions, and life lesson).
 - `GET /game/status`: Returns the current status of the game, including remaining attempts and guess history.
 
-## Creative Extensions
+## 🚀 Creative Extensions
 
 ### 1. **Hints System**
    - **Description**: Provide players with hints after a set number of failed attempts.
@@ -155,7 +165,7 @@ While this game is currently console-based and does not expose traditional API e
    - **Description**: After each game or set of guesses, players can review the life lessons they’ve earned throughout their gameplay.
    - **How it works**: Display a summary of the life lessons, reinforcing the motivational messages as players progress.
 
-## Life Lessons Learned from Project
+## 📖 Lessons Learned from the Project
 
 Developing **Gems of Life** was an incredible journey that tested and sharpened my technical and personal skills. This project taught me lessons that go beyond coding, mirroring the core values of perseverance, adaptability, and self-belief that are essential in both backend engineering and life.
 
@@ -184,7 +194,7 @@ Through this process, I discovered the power of faith—both in my technical abi
 This project is a testament to the synergy between technical problem-solving and personal development. It’s not just a game—it’s a reflection of the perseverance and passion required to navigate both code and life.
 
 ### GitHub Attempts:
-Here are my previous GitHub attempts at creating **Gems of Life**:
+Here are my previous verisons of **Gems of Life**:
 - [Life Gems](#)
 - [Gems of Life Game](#)
 
