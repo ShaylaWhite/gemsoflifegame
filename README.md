@@ -3,8 +3,8 @@
 ## Table of Contents
 - [Overview](#overview)
 - [Technologies Used](#technologies-used)
-- [Core Values](#core-values)
-- [How to Set Up](#how-to-set-up)
+- [Life Lessons Integration](#life-lessons-integration)
+- [Game Overview](#game-overview)
 - [Running the Game](#running-the-game)
 - [Game Rules](#game-rules)
 - [Example Game Flow](#example-game-flow)
@@ -46,13 +46,12 @@ This project is designed to highlight backend engineering skills by focusing on:
 
 # 🎮 Game Overview
 
-## 🛠️ How Set Up
-
-### Prerequisites
+### 🛠️ How to Set Up
+#### Prerequisites
 - **Java**: Ensure JDK 8+ is installed.
 - **Maven (optional)**: For building and managing dependencies.
 
-### Setup Instructions
+#### Setup Instructions
 1. Clone the repository:
    ```bash
    git clone https://github.com/ShaylaWhite/gemsoflifegame.git
@@ -64,26 +63,28 @@ This project is designed to highlight backend engineering skills by focusing on:
 3. If using Maven, build the project:
       ```
     mvn clean install
+ **Open the project in your preferred IDE (IntelliJ, Eclipse) or compile it using the terminal.**
 
-Open the project in your preferred IDE (IntelliJ, Eclipse) or compile it using the terminal.
-
-## 🛠️ How to Run
+### 🛠️ How to Run
 - Using the Command Line
 - Navigate to the src directory and locate the ConsoleUI class.
 - Compile the program:
   
-  javac ConsoleUI.java
-
-### Run the program:
+    ```
+  java ConsoleUI.java
+    ```
+### 🛠️ Run the program
+  ``` 
   java ConsoleUI
-  
+  ```
 ### Game Rules
-Guess a combination of 4 unique numbers between 0 and 7.
-You have 10 attempts to guess the correct combination.
-Earn "gems" for:
-Correct numbers.
-Correct positions.
-Receive a life lesson after every guess.
+- Guess a combination of 4 unique numbers between 0 and 7.
+- You have 10 attempts to guess the correct combination.
+- Earn "gems" for:
+   1. Correct numbers.
+   2. Correct positions.
+- Receive a life lesson after every guess.
+
 
 ### Example Game Flow
 ```bash
