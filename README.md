@@ -46,7 +46,7 @@ This project is designed to highlight backend engineering skills by focusing on:
 
 # 🎮 Game Overview
 
-## How to Set Up
+## 🛠️ How Set Up
 
 ### Prerequisites
 - **Java**: Ensure JDK 8+ is installed.
@@ -67,7 +67,7 @@ This project is designed to highlight backend engineering skills by focusing on:
 
 Open the project in your preferred IDE (IntelliJ, Eclipse) or compile it using the terminal.
 
-### 🛠️ How to Run
+## 🛠️ How to Run
 - Using the Command Line
 - Navigate to the src directory and locate the ConsoleUI class.
 - Compile the program:
