@@ -263,7 +263,7 @@ By separating the game logic (like generating the secret combination) into the G
 
 Why is this important?: This separation of concerns allows for better maintainability and scalability. It makes it easier to swap out the random number generation logic in the future if needed without affecting the rest of the codebase.
 
-Error Handling:
+- **Error Handling:**
 The game checks if the API response is valid and throws an exception if the data retrieval fails. This ensures that the game doesn’t proceed with invalid or empty data.
 
 Why is this important?: Proper error handling ensures that users are informed if something goes wrong, such as the random number generation failing, rather than continuing with incorrect game data.
