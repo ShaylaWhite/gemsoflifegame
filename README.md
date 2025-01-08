@@ -127,32 +127,43 @@ The project is structured using **Model-View-Controller (MVC)** and **Object-Ori
 
 **Model** <-> (Service Layer) <-> **Controller** <-> **View**
 
-- **Model**:
-  - Defines and manages the application's data structure.
-  - Stores data and game state.
-  - Contains the logic for handling the game state, including the secret combination, guesses, and gems.
-  - `Game`: Handles the game state, including attempts, secret combination, and gem collection.
-  - `Guess`: Represents a player's guess and compares it to the secret combination to calculate correct numbers and positions.
-  - The Game and Guess models encapsulate game data, ensuring it's stored and manipulated efficiently.
+### Model
 
-- **View**:
-  - Manages the interaction with the user (player).
-  - `ConsoleUI`: Displays prompts and feedback in the console, and takes input from the user.
+The **Model** defines and manages the data structure of the application. It contains the game state, including the secret combination, guesses, and the player's progress.
 
-- **Controller**:
-  - Manages the flow of the game, updates the game state, and interacts with the view to display the results.
-  - `GameController`: Coordinates and controls routes, communicates the game logic, manages guesses, tracks attempts, and triggers life lessons.
-  - GameController exposes RESTful endpoints that allow external clients to:
+- **Game**: Represents the game state and contains the logic for handling game operations, such as checking guesses and managing attempts.
+  - Manages secret combination and game history.
+  - Stores motivational gems and life lessons.
+  - Contains methods to check the correctness of guesses.
+
+- **Guess**: Represents a player's guess and compares it to the secret combination to calculate correct numbers and positions.
+  - Tracks the user's guess history.
+  - Provides feedback on the accuracy of each guess and includes motivational life lessons based on the guess performance.
+
+### View
+
+The **View** manages the interaction with the user (player).
+
+- **ConsoleUI**: Displays prompts, feedback, and takes input from the user in the console interface.
+
+### Controller
+
+The **Controller** manages the flow of the game, updates the game state, and interacts with the view to display the results.
+
+- **GameController**: Coordinates and controls routes, manages guesses, tracks attempts, and triggers motivational life lessons.
+  - Exposes RESTful endpoints to external clients to:
     - Submit guesses.
     - Retrieve game statuses.
     - Start new games.
 
-- **Service Layer**:
-  - Encapsulates business logic, making your code modular and maintainable.
-  - Handles the business logic workflows and business rules.
-  - Ensures reusability, modularity, and maintainability.
-  - Manages the lifecycle of a game.
-  - Implements business processes and handles game logic.
+### Service Layer
+
+The **Service Layer** encapsulates business logic, making the code modular, reusable, and maintainable.
+
+- **GameService**: Handles the game lifecycle, business logic workflows, and external API interaction (fetching random numbers for secret combinations).
+  - Manages game state, including starting a new game and fetching game data.
+  - Handles API requests using RestTemplate to generate a secret combination.
+
 
 ### **Object-Oriented Programming (OOP)**
 
