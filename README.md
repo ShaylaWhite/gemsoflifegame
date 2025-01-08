@@ -42,7 +42,7 @@ This project is designed to highlight backend engineering skills by focusing on:
 - **Logic Implementation**: Developing accurate algorithms for calculating correct numbers, positions, and determining game outcomes.
 - **State Management:** Tracking user progress and integrating life lessons dynamically based on their gameplay.
 - **Error Handling**: Anticipating invalid inputs and ensuring the game continues running smoothly without disruptions.
-  **Scalability:** Using modular design principles for easy integration of additional features, such as hints or web-based APIs.
+- **Scalability:** Using modular design principles for easy integration of additional features, such as hints or web-based APIs.
 
 # 🎮 Game Overview
 
@@ -123,34 +123,155 @@ You have 9 guesses left.
 
 The project is structured using **Model-View-Controller (MVC)** and **Object-Oriented Programming (OOP)** principles. Here’s how the code is organized:
 
-- **Model**: Contains the logic for handling the game state, including the secret combination, guesses, and gems.
+### **Model-View-Controller (MVC)**
+
+**Model** <-> (Service Layer) <-> **Controller** <-> **View**
+
+- **Model**:
+  - Defines and manages the application's data structure.
+  - Stores data and game state.
+  - Contains the logic for handling the game state, including the secret combination, guesses, and gems.
   - `Game`: Handles the game state, including attempts, secret combination, and gem collection.
   - `Guess`: Represents a player's guess and compares it to the secret combination to calculate correct numbers and positions.
-  - `LifeLesson`: Contains the motivational life lessons associated with each guess.
+  - The Game and Guess models encapsulate game data, ensuring it's stored and manipulated efficiently.
 
-- **View**: Manages the interaction with the user (player).
+- **View**:
+  - Manages the interaction with the user (player).
   - `ConsoleUI`: Displays prompts and feedback in the console, and takes input from the user.
 
-- **Controller**: Manages the flow of the game, updates the game state, and interacts with the view to display the results.
-  - `GameController`: Coordinates the game logic, manages guesses, tracks attempts, and triggers life lessons.
+- **Controller**:
+  - Manages the flow of the game, updates the game state, and interacts with the view to display the results.
+  - `GameController`: Coordinates and controls routes, communicates the game logic, manages guesses, tracks attempts, and triggers life lessons.
+  - GameController exposes RESTful endpoints that allow external clients to:
+    - Submit guesses.
+    - Retrieve game statuses.
+    - Start new games.
+
+- **Service Layer**:
+  - Encapsulates business logic, making your code modular and maintainable.
+  - Handles the business logic workflows and business rules.
+  - Ensures reusability, modularity, and maintainability.
+  - Manages the lifecycle of a game.
+  - Implements business processes and handles game logic.
+
+### **Object-Oriented Programming (OOP)**
+
+- **Encapsulation**: 
+  The project uses encapsulation to group related data and methods into classes. For example, the `Game` class encapsulates the game state, and the `Guess` class encapsulates the logic for player guesses. This ensures that related functionalities are logically grouped, making the code easier to maintain and extend.
+
+- **Abstraction**: 
+  The internal workings of the game, like logic and state management, are abstracted into the `Game` and `Guess` classes. The `GameController` exposes a simplified interface for interacting with the game, allowing external clients to focus on high-level operations without needing to understand the complex inner workings.
+
+- **Modularity**: 
+  Each component (model, view, controller, service layer) is independent, making the code more manageable and easier to extend. For instance, the game state can be updated and extended without altering the game logic. This makes the project scalable as new features can be added without significant code changes.
+
+- **Inheritance**: 
+  Future features can be added by extending existing classes. For example, new types of guesses or game modes could be derived from the base `Guess` class, making the system more flexible and scalable. This also adheres to the DRY (Don’t Repeat Yourself) principle by allowing code reuse.
 
 ## 🤝 Backend Skills Demonstrated
 
-This project demonstrates various backend development skills:
+This project demonstrates various backend development skills, highlighting your ability to design, implement, and maintain complex systems:
 
-- **MVC Architecture**: The project uses the Model-View-Controller pattern to separate concerns and improve code maintainability.
-- **OOP Principles**: The project is built with Object-Oriented Programming principles, making it modular and extensible.
-- **State Management**: Game state (e.g., attempts, guesses) is efficiently managed within the `Game` model.
-- **Life Lessons Integration**: Motivational feedback is delivered to players through the `LifeLesson` model, showcasing integration of both technical and personal growth aspects.
-- **Dependency Management**: Maven is used to handle dependencies and build the project, demonstrating proficiency in project management tools.
+- **MVC Architecture**: The project uses the **Model-View-Controller** pattern to separate concerns, making the codebase more modular, maintainable, and scalable. This allows for better organization and cleaner code, where each component has a distinct responsibility.
+  
+- **OOP Principles**: The project is built with **Object-Oriented Programming** principles, making it modular and extensible. By using encapsulation, abstraction, inheritance, and polymorphism, the system can be easily extended and maintained.
+  
+- **State Management**: Game state (e.g., attempts, guesses) is efficiently managed within the `Game` model, allowing for real-time updates and interactions. This ensures that the state is always consistent and accessible across the application.
+
+- **Life Lessons Integration**: Motivational feedback is delivered to players through the `LifeLesson` model, showcasing how technical logic can be combined with user engagement to create a more interactive and rewarding experience.
+
+- **Dependency Management**: **Maven** is used to handle dependencies and build the project, demonstrating proficiency in project management tools. This ensures that external libraries and frameworks are properly managed and integrated into the project.
+
 
 ## API Endpoints
 
-While this game is currently console-based and does not expose traditional API endpoints, here’s an outline of how an API might look if this game were to be web-based:
+While this game is currently console-based, here’s an outline of how it could be transformed into a web-based API application. This demonstrates the flexibility of the current code structure and how easily it can be adapted to expose game functionality over HTTP.
 
-- `GET /game/start`: Starts a new game and generates a random secret combination.
-- `POST /game/guess`: Submits a player’s guess and returns the result (correct numbers, positions, and life lesson).
-- `GET /game/status`: Returns the current status of the game, including remaining attempts and guess history.
+### Proposed API Endpoints:
+
+- **`GET /game/start`**: Starts a new game and generates a random secret combination.
+- **`POST /game/guess`**: Submits a player’s guess and returns the result (correct numbers, positions, and life lesson).
+- **`GET /game/status`**: Returns the current status of the game, including remaining attempts and guess history.
+
+---
+
+## Random Number API Integration
+
+To generate a random secret number for the game, I decided to integrate an external API — [Random.org](https://www.random.org/) — which provides truly random numbers generated from atmospheric noise. This ensures that each game starts with a unique secret combination, which makes the gameplay experience fair and unpredictable.
+
+### Code Snippet:
+
+```java
+// API URL to retrieve random numbers
+private static final String API_URL = "https://www.random.org/integers";
+
+// Number of digits to generate for the secret combination
+private static final int NUMBERS_TO_GENERATE = 4;
+
+// Minimum and maximum values for the generated numbers
+private static final int MIN_VALUE = 0;
+private static final int MAX_VALUE = 7;
+
+// RestTemplate used for making HTTP requests
+private final RestTemplate restTemplate;
+
+// Holds the current game instance
+private Game currentGame;
+```
+
+### Constructor Explanation
+
+The constructor initializes the `RestTemplate` for making HTTP requests. `RestTemplate` is part of Spring's framework and is a powerful tool to simplify the process of interacting with web services.
+
+```java
+public GameService(RestTemplate restTemplate) {
+    this.restTemplate = restTemplate;
+}
+
+```
+### Starting a New Game
+The startNewGame() method is responsible for calling the Random.org API to retrieve a random number combination. It then initializes the game with this secret combination.
+```
+public Game startNewGame() {
+    URI uri = URI.create(String.format("%s?num=%d&min=%d&max=%d&col=1&base=10&format=plain&rnd=new",
+            API_URL, NUMBERS_TO_GENERATE, MIN_VALUE, MAX_VALUE));
+
+    String response = restTemplate.getForObject(uri, String.class);
+
+    if (response == null || response.trim().isEmpty()) {
+        throw new IllegalStateException("Failed to retrieve valid secret combination from Random.org API.");
+    }
+
+    int[] secretCombination = Arrays.stream(response.split("\n"))
+            .mapToInt(Integer::parseInt)
+            .toArray();
+
+    currentGame = new Game(secretCombination);
+
+    return currentGame;
+}
+```
+
+## Key Decisions
+- **API Integration:**
+I used the Random.org to generate the secret combination as recommended as it provides high-quality randomness based on atmospheric noise, which is much better than relying on pseudo-random number generators that are commonly used in programming. This ensures that each game is unique and offers a fair, unpredictable experience.
+
+Why Random.org?: Using a trusted external API like Random.org allows for true randomness, which ensures fairness in game outcomes. The API is reliable, and its integration is straightforward using Spring's RestTemplate.
+
+- **Separation of Concerns:**
+By separating the game logic (like generating the secret combination) into the GameService class, I’ve ensured that the controller’s responsibilities are kept minimal and focused on HTTP request handling.
+
+Why is this important?: This separation of concerns allows for better maintainability and scalability. It makes it easier to swap out the random number generation logic in the future if needed without affecting the rest of the codebase.
+
+Error Handling:
+The game checks if the API response is valid and throws an exception if the data retrieval fails. This ensures that the game doesn’t proceed with invalid or empty data.
+
+Why is this important?: Proper error handling ensures that users are informed if something goes wrong, such as the random number generation failing, rather than continuing with incorrect game data.
+
+- **Extensibility:**
+This code is designed to easily integrate into a larger web-based application. For example, I can add an HTTP controller (using @RestController in Spring Boot) to expose the endpoints for starting the game, submitting guesses, and checking the game status.
+
+Why is this important?: Extending the functionality to a web application makes the game more accessible and interactive, allowing users to play through a browser or client-side application.
 
 ## 🚀 Creative Extensions
 
